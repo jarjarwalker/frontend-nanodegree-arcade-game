@@ -1,21 +1,26 @@
 // Enemies our player must avoid
 let debug = false;
 let game = true;
-var Enemy = function () {
+var Enemy = function (x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    this.x = x;
+    this.y = y;
+    this.sprite = 'images/enemy-bug.png';
     this.height = 65;
     this.width = 95;
-    this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function (dt) {
-    this.x += 150;
+    this.x += 150 * dt;
+    if (this.x > (ctx.canvas.width-101)) {
+        this.x = -200;
+    }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -45,14 +50,17 @@ Player.prototype.render = function () {
 };
 
 Player.prototype.handleInput = function (direction) {
-    if (direction === 'left') {
-        this.x -= 100;
-    } else if (direction === 'right') {
-        this.x += 100;
-    } else if (direction === 'down') {
-        this.y += 83;
-    } else if (direction === 'up') {
-        this.y -= 83;
+    const horizontal = 101,
+          vertical = 83;
+
+    if (direction === 'left' && this.x - horizontal >= -101) {
+        this.x -= horizontal;
+    } else if (direction === 'right' && this.x + horizontal < (ctx.canvas.width-101)) {
+        this.x += horizontal;
+    } else if (direction === 'down' && this.y + vertical < (ctx.canvas.height-166)) {
+        this.y += vertical;
+    } else if (direction === 'up' && this.y - vertical >= (-83)) {
+        this.y -= vertical;
     }
 };
 
