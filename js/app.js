@@ -12,14 +12,28 @@ var Enemy = function (x, y) {
     this.sprite = 'images/enemy-bug.png';
     this.height = 65;
     this.width = 95;
+    this.collision = false;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function (dt) {
-    this.x += 150 * dt;
-    if (this.x > (ctx.canvas.width-101)) {
-        this.x = -200;
+    
+    if (this.x > (ctx.canvas.width)) {
+        this.x = -200 * Math.floor((Math.random()*4) +1);
+    }else{
+        this.x += 150 * dt;
+    }
+
+    if(collision(player.x, player.y, player.height, player.width, this.x, this.y, this.height, this.width)){
+        this.collision = true;
+    
+        if(player){
+            player.x = 200;
+            player.y = 400;
+        }
+    }else {
+        this.collision = false;
     }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -30,6 +44,9 @@ Enemy.prototype.update = function (dt) {
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+
+
 
 var Player = function (x, y, sprite) {
 
@@ -103,3 +120,9 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function collision(px, py, ph, pw, ex, ey, eh, ew){
+
+    return(Math.abs(px - ex) * 2 < pw + ew) && (Math.abs(py - ey) * 2 < ph + eh);
+
+}
