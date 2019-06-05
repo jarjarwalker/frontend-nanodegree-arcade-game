@@ -1,85 +1,89 @@
 // Enemies our player must avoid
 let debug = false;
 let game = true;
-var Enemy = function (x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.x = x;
-    this.y = y;
-    this.sprite = 'images/enemy-bug.png';
-    this.height = 65;
-    this.width = 95;
-    this.collision = false;
-};
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function (dt) {
-    
-    if (this.x > (ctx.canvas.width)) {
-        this.x = -200 * Math.floor((Math.random()*4) +1);
-    }else{
-        this.x += 150 * dt;
-    }
-
-    if(collision(player.x, player.y, player.height, player.width, this.x, this.y, this.height, this.width)){
-        this.collision = true;
-    
-        if(player){
-            player.x = 200;
-            player.y = 400;
-        }
-    }else {
+class Enemy {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.sprite = 'images/enemy-bug.png';
+        this.height = 65;
+        this.width = 95;
         this.collision = false;
     }
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-};
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    update(dt) {
 
+        let speed = (Math.floor(Math.random() * 4) + 1);
+        if (this.x > (ctx.canvas.width)) {
+            this.x = -200 * Math.floor((Math.random() * 4) + 1);
+        } else {
+            this.x += 150 * speed * dt;
+        }
 
+        if (collision(player.x, player.y, player.height, player.width, this.x, this.y, this.height, this.width)) {
+            this.collision = true;
 
+            if (player) {
+                player.x = 200;
+                player.y = 400;
+            }
+        } else {
+            this.collision = false;
+        }
 
-var Player = function (x, y, sprite) {
-
-    this.x = x;
-    this.y = y;
-    this.height = 75;
-    this.width = 65;
-    this.sprite = sprite;
-};
-
-
-Player.prototype.update = function (dt) {
-
-};
-
-Player.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-Player.prototype.handleInput = function (direction) {
-    const horizontal = 101,
-          vertical = 83;
-
-    if (direction === 'left' && this.x - horizontal >= -101) {
-        this.x -= horizontal;
-    } else if (direction === 'right' && this.x + horizontal < (ctx.canvas.width-101)) {
-        this.x += horizontal;
-    } else if (direction === 'down' && this.y + vertical < (ctx.canvas.height-166)) {
-        this.y += vertical;
-    } else if (direction === 'up' && this.y - vertical >= (-83)) {
-        this.y -= vertical;
     }
-};
+
+    render() {
+
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    }
+}
+
+class Player {
+
+    constructor(x, y, sprite) {
+
+        this.x = x;
+        this.y = y;
+        this.height = 75;
+        this.width = 65;
+        this.sprite = sprite;
+
+    }
+    //If player touches the water, the game ends and prompts an alert box
+    update(dt) {
+        if(game && this.y < 15){
+            swal("Good job!", "You made it to the other side", "success");
+            this.x = 200;
+            this.y = 400;
+
+        }
+
+    }
+
+    render() {
+
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    }
+
+    handleInput(direction) {
+        const horizontal = 101,
+            vertical = 83;
+
+        if (direction === 'left' && this.x - horizontal >= -101) {
+            this.x -= horizontal;
+        } else if (direction === 'right' && this.x + horizontal < (ctx.canvas.width - 101)) {
+            this.x += horizontal;
+        } else if (direction === 'down' && this.y + vertical < (ctx.canvas.height - 166)) {
+            this.y += vertical;
+        } else if (direction === 'up' && this.y - vertical >= (-83)) {
+            this.y -= vertical;
+        }
+    }
+}
 
 const enemyPosition = [55, 140, 230];
 
@@ -109,7 +113,7 @@ const allEnemies = enemyPosition.map((y, index) => {
 
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method. 
 document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
@@ -121,8 +125,12 @@ document.addEventListener('keyup', function (e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-function collision(px, py, ph, pw, ex, ey, eh, ew){
+function collision(px, py, ph, pw, ex, ey, eh, ew) {
 
-    return(Math.abs(px - ex) * 2 < pw + ew) && (Math.abs(py - ey) * 2 < ph + eh);
+    return (Math.abs(px - ex) * 2 < pw + ew) && (Math.abs(py - ey) * 2 < ph + eh);
 
+}
+
+let wonGame = function() {
+    window.alert('You won the game');
 }
