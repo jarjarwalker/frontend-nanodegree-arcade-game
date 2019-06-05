@@ -1,7 +1,4 @@
-// Enemies our player must avoid
-let debug = false;
-let game = true;
-
+//Enemy class
 class Enemy {
     constructor(x, y) {
         this.x = x;
@@ -11,7 +8,7 @@ class Enemy {
         this.width = 95;
         this.collision = false;
     }
-
+    // Updates enemy position, once the bugs cross the screen this updates the bugs back to their starting position off screen
     update(dt) {
 
         let speed = (Math.floor(Math.random() * 4) + 1);
@@ -20,7 +17,7 @@ class Enemy {
         } else {
             this.x += 150 * speed * dt;
         }
-
+        // call collision function to check if the player has collided into the bugs, if collided the game resets
         if (collision(player.x, player.y, player.height, player.width, this.x, this.y, this.height, this.width)) {
             this.collision = true;
 
@@ -33,14 +30,14 @@ class Enemy {
         }
 
     }
-
+    //Draw the enemy on the screen
     render() {
 
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
     }
 }
-
+//Player class
 class Player {
 
     constructor(x, y, sprite) {
@@ -49,7 +46,7 @@ class Player {
         this.y = y;
         this.height = 75;
         this.width = 65;
-        this.sprite = sprite;
+        this.sprite = sprite;//sets the player image
 
     }
     //If player touches the water, the game ends and prompts an alert box
@@ -62,13 +59,13 @@ class Player {
         }
 
     }
-
+    //Draws player on screen
     render() {
 
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
     }
-
+    //handles the keyboard event and keeps the player within the canvas
     handleInput(direction) {
         const horizontal = 101,
             vertical = 83;
@@ -84,33 +81,14 @@ class Player {
         }
     }
 }
-
+//array of the enemy starting y positions
 const enemyPosition = [55, 140, 230];
-
+//player
 const player = new Player(200, 400, 'images/char-boy.png');
-
+//array of all the enemy objects
 const allEnemies = enemyPosition.map((y, index) => {
     return new Enemy((-200 * (index + 1)), y);
 });
-
-
-
-
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
-
-
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-
-// Place the player object in a variable called player
-
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. 
@@ -124,13 +102,13 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
+//function to check for any collisions
 function collision(px, py, ph, pw, ex, ey, eh, ew) {
 
     return (Math.abs(px - ex) * 2 < pw + ew) && (Math.abs(py - ey) * 2 < ph + eh);
 
 }
-
+//function to alert the player if they won the game
 let wonGame = function() {
     window.alert('You won the game');
 }
