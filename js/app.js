@@ -1,3 +1,4 @@
+'use strict';
 //Enemy class
 class Enemy {
     constructor(x, y) {
@@ -82,6 +83,7 @@ class Player {
 
     }
 }
+
 //array of the enemy starting y positions
 const enemyPosition = [55, 140, 230];
 //player
