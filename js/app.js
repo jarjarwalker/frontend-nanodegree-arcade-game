@@ -46,12 +46,12 @@ class Player {
         this.y = y;
         this.height = 75;
         this.width = 65;
-        this.sprite = sprite;//sets the player image
+        this.sprite = sprite; //sets the player image
 
     }
     //If player touches the water, the game ends and prompts an alert box
     update(dt) {
-        if(game && this.y < 15){
+        if (this.y < 15) {
             swal("Good job!", "You made it to the other side", "success");
             this.x = 200;
             this.y = 400;
@@ -79,6 +79,7 @@ class Player {
         } else if (direction === 'up' && this.y - vertical >= (-83)) {
             this.y -= vertical;
         }
+
     }
 }
 //array of the enemy starting y positions
@@ -109,6 +110,6 @@ function collision(px, py, ph, pw, ex, ey, eh, ew) {
 
 }
 //function to alert the player if they won the game
-let wonGame = function() {
+let wonGame = function () {
     window.alert('You won the game');
 }
